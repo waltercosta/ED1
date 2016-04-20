@@ -1,0 +1,147 @@
+
+import java.util.NoSuchElementException;
+
+import ListaSimplesmenteEncadeada.NoSimpEnc;
+
+public class PilhaEncadeada<T> implements IPilha<T>, Iterable<T> {
+
+	private NoSimpEnc<T> inicio;
+	private NoSimpEnc<T> topo;
+	private int cont;
+	
+	public NoSimpEnc<T> localizaPosicao(int posicao) {
+		NoSimpEnc<T> aux = this.inicio;
+		for (int i = 0; i < posicao - 1; i++) {
+			aux = aux.getProximo();
+		}
+		return aux;
+	}
+	
+	@Override
+	public T top() {
+		return this.topo.getElemento();
+	}
+
+	@Override
+	public void limpar() {
+		if (this.inicio != null) {
+			NoSimpEnc<T> aux;
+			for (int i = 0; i < this.cont; i++) {
+				aux = this.inicio;
+				this.inicio = this.inicio.getProximo();
+				aux.setElemento(null);
+			}
+			this.inicio = this.topo = null;
+			this.cont = 0;
+		}
+	}
+
+	@Override
+	public int tamanho() {
+		return this.cont;
+	}
+
+	@Override
+	public boolean estaVazia() {
+		if (this.inicio == null && this.topo == null) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean contem(T elemento) {
+		NoSimpEnc<T> aux = this.inicio;
+		for (int i = 0; i < this.cont; i++) {
+			if (aux.getElemento().equals(elemento)) {
+				return true;
+			}
+			aux = aux.getProximo();
+		}
+		return false;
+	}
+
+	@Override
+	public int distancia(T elemento) {
+		NoSimpEnc<T> aux = this.inicio;
+		for (int i = 0; i < this.cont; i++) {
+			if(aux.getElemento().equals(elemento)){
+				return this.cont - (i - 1);
+			}
+		}
+		return - 1;
+	}
+
+	@Override
+	public T desempilhar() {
+		NoSimpEnc<T> aux = this.localizaPosicao(this.cont - 1);
+		T guardaFim = this.top();
+		aux.setProximo(null);
+		this.topo.setElemento(null);
+		this.topo = aux;
+		this.cont--;
+		return guardaFim;
+	}
+
+	@Override
+	public void empilhar(T elemento) {
+		NoSimpEnc<T> newElement = new NoSimpEnc<T>(elemento);
+		if (this.inicio == null) {
+			this.inicio = this.topo = newElement;
+
+		} else {
+			NoSimpEnc<T> aux = this.topo;
+			aux.setProximo(newElement);
+			this.topo = newElement;
+		}
+		this.cont++;
+	}
+	
+	public String toString() {
+		NoSimpEnc<T> lista = this.inicio;
+		String texto = "[";
+		if (this.cont == 0) {
+			return "[]";
+		} else {
+			for (int i = 0; i < cont - 1; i++) {
+				texto = texto + lista.getElemento() + ",";
+				lista = lista.getProximo();
+			}
+		}
+		texto = texto + lista.getElemento() + "]";
+		return texto;
+	}
+	
+	@Override
+	public Iterator<T> iterator() {
+		Iterator<T> myIterator = new Iterator<T>() {
+
+			private NoSimpEnc<T> posicao = inicio;
+
+			@Override
+			public boolean hasNext() {
+				if (posicao != null) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+			@Override
+			public T next() throws NoSuchElementException {
+				if (!hasNext()) {
+					throw new NoSuchElementException();
+				} else {
+					T elemento = posicao.getElemento();
+					posicao = posicao.getProximo();
+					return elemento;
+				}
+			}
+
+			@Override
+			public void remove() {
+			}
+		};
+		return myIterator;
+	}
+}
