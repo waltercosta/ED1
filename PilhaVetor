@@ -1,0 +1,123 @@
+package Pilha;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class PilhaVetor<T> implements IPilha<T> {
+
+	private T[] elementos; // como instanciar: (T[]) new Object[tamVetor]
+	int topo; // contador de elementos
+
+	@Override
+	public T top() {
+		return elementos[topo - 1];
+	}
+
+	@Override
+	public void limpar() {
+		this.topo = 0;
+	}
+
+	@Override
+	public int tamanho() {
+		return this.topo;
+	}
+
+	@Override
+	public boolean estaVazia() {
+		if (this.topo == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean contem(T elemento) {
+		for (int i = 0; i < tamanho(); i++) {
+			if (elementos[i].equals(elemento)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public int distancia(T elemento) {
+		for (int i = 0; i < tamanho(); i++) {
+			if (elementos[i].equals(elemento)) {
+				return this.topo - (i - 1);
+			}
+		}
+		return -1;
+	}
+
+	@Override
+	public T desempilhar() {
+		if (this.topo != 0) {
+			this.topo--;
+			return this.elementos[this.topo + 1];
+		}
+		return null;
+
+	}
+
+	@Override
+	public void empilhar(T elemento) {
+		elementos[this.topo] = elemento;
+		this.topo++;
+	}
+	
+	public String toString2() {
+		/* Quando o contElementos foi 0, ele imprime "[]" */
+		if (this.topo == 0) {
+			return "[]";
+		}
+		/*
+		 * Construindo uma String usando manipulação de String através do
+		 * StringBuilder
+		 */
+		StringBuilder manipulador = new StringBuilder();
+		manipulador.append("[");
+		/*
+		 * Percorre o vetor e adciona a vírgula na frente do elemento. Lembrando
+		 * que o último elemento não pode ser incluído
+		 */
+		for (int i = 0; i < this.topo - 1; i++) {
+			manipulador.append(elementos[i]);
+			manipulador.append(",");
+		}
+		/*
+		 * Finaliza a String adcionando o ultimo elemento que não foi adcionado
+		 * no for e fecha o colchete.
+		 */
+		manipulador.append(elementos[this.topo - 1]);
+		manipulador.append("]");
+		return manipulador.toString();
+	}
+	
+	private Iterator<T> myIterator = new Iterator<T>() {
+
+		private int posicao = 0;
+
+		@Override
+		public boolean hasNext() {
+			if (posicao < topo) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		@Override
+		public T next() throws NoSuchElementException {
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			} else {
+				T elemento = elementos[posicao];
+				posicao++;
+				return elemento;
+			}
+		}
+	};
+}
