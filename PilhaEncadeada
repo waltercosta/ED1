@@ -88,7 +88,6 @@ public class PilhaEncadeada<T> implements IPilha<T>, Iterable<T> {
 		NoSimpEnc<T> newElement = new NoSimpEnc<T>(elemento);
 		if (this.inicio == null) {
 			this.inicio = this.topo = newElement;
-
 		} else {
 			NoSimpEnc<T> aux = this.topo;
 			aux.setProximo(newElement);
